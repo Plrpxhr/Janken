@@ -6,174 +6,169 @@ body {
     min-height: 100vh;
     background-color: #f0f0f0;
     margin: 0;
-    color: #333;
 }
 
 .container {
     background-color: #fff;
     padding: 30px;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
     width: 90%;
     max-width: 600px;
-    position: relative; /* ステージ数の配置のために追加 */
-}
-
-/* ステージ数のコンテナを左上に配置 */
-#stage-info-container {
-    position: absolute;
-    top: 15px;
-    left: 20px;
-    font-size: 1.5em;
-    font-weight: bold;
-    color: #555;
 }
 
 h1 {
-    color: #4CAF50;
+    color: #333;
     margin-bottom: 20px;
-    margin-top: 20px; /* ステージ数と被らないように調整 */
 }
 
-h2 {
-    color: #007bff;
-    margin-top: 30px;
+#stage-info-container {
     margin-bottom: 15px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #555;
 }
 
-#game-area, #skill-selection-area {
+#game-area {
     margin-top: 20px;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
 }
 
-/* じゃんけんメインエリアの配置 */
+#message {
+    font-size: 1.1em;
+    color: #007bff;
+    margin-bottom: 20px;
+}
+
 .janken-main-area {
     display: flex;
-    flex-direction: column; /* 縦に並べる */
-    align-items: center; /* 中央揃え */
-    margin-top: 20px;
+    justify-content: space-around;
+    align-items: flex-start; /* 縦方向の配置を調整 */
+    margin-bottom: 30px;
 }
 
 .opponent-display, .player-display {
+    border: 1px solid #ddd;
     padding: 15px;
-    margin-bottom: 20px; /* 相手と自分の間にスペース */
-    border: 1px solid #eee;
     border-radius: 8px;
-    width: 80%; /* 幅を調整 */
-    background-color: #f3f3f3;
+    flex: 1; /* 等しい幅 */
+    margin: 0 10px;
 }
 
 .opponent-display h2, .player-display h2 {
-    margin: 0 0 10px 0;
-    color: #555;
-    font-size: 1.2em;
+    margin-top: 0;
+    color: #666;
 }
 
 #cpu-hand, #player-hand {
-    font-size: 2.5em; /* 手の表示を大きく */
+    font-size: 2.5em;
     font-weight: bold;
     margin: 10px 0;
-    min-height: 40px; /* 表示がなくてもレイアウトが崩れないように */
+    color: #333;
 }
 
 #result {
-    font-size: 1.3em;
+    font-size: 1.5em;
     font-weight: bold;
-    color: #e67e22;
-    margin-bottom: 15px;
+    color: #dc3545; /* 負けた時など */
+    margin-top: 15px;
 }
 
 .hands {
-    margin: 20px 0;
+    margin-top: 20px;
 }
 
 .hand-btn {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 12px 25px;
-    margin: 0 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1.1em;
-    transition: background-color 0.2s ease;
-}
-
-.hand-btn:hover {
-    background-color: #0056b3;
-}
-
-#skills-display {
-    min-height: 50px;
-    border: 1px dashed #ccc;
-    padding: 10px;
-    margin-top: 15px;
-    border-radius: 5px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-}
-
-.skill-item {
-    background-color: #e0f7fa;
-    border: 1px solid #00bcd4;
-    padding: 8px 15px;
-    border-radius: 20px;
-    font-size: 0.9em;
-    color: #00796b;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    white-space: nowrap;
-}
-
-.skill-item:hover {
-    background-color: #b2ebf2;
-}
-
-.skill-item.active-skill {
-    background-color: #ffeb3b;
-    border-color: #fbc02d;
-    color: #f57f17;
-}
-
-.skill-option-btn {
     background-color: #28a745;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 12px 25px;
     margin: 5px;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.2s ease;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease;
 }
 
-.skill-option-btn:hover {
+.hand-btn:hover:not(:disabled) {
     background-color: #218838;
 }
 
+.hand-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+#skills-display {
+    margin-top: 20px;
+    border-top: 1px dashed #eee;
+    padding-top: 15px;
+    text-align: left; /* スキル表示を左寄せ */
+}
+
+.player-skill-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    margin: 5px 5px 5px 0; /* 右と下に少しマージン */
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+}
+
+.player-skill-btn:hover {
+    background-color: #0056b3;
+}
+
 #reset-game {
-    background-color: #dc3545;
+    background-color: #6c757d;
     color: white;
     border: none;
     padding: 10px 20px;
-    margin-top: 20px;
+    margin-top: 30px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 1em;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.3s ease;
 }
 
 #reset-game:hover {
-    background-color: #c82333;
+    background-color: #5a6268;
 }
 
 .hidden {
-    display: none;
+    display: none !important;
+}
+
+/* スキル選択画面 */
+#skill-selection-area {
+    margin-top: 20px;
+    background-color: #e9ecef;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+#skill-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.skill-option-btn {
+    background-color: #17a2b8;
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+    text-align: left;
+}
+
+.skill-option-btn:hover {
+    background-color: #138496;
 }
