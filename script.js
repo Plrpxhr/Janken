@@ -2,7 +2,7 @@
 let currentStage = 1;
 let playerSkills = [];
 let availableSkillSlots = 3; // スキル使用回数
-let cpuSkills = [];
+let cpuSkills = []; // 現時点では未使用ですが、今後の拡張のために残しておきます
 let cpuSkillUsageCount = 0; // CPUのスキル使用回数（各ステージで3回まで）
 
 // DOM要素の取得
@@ -18,7 +18,7 @@ const rulesBtn = document.getElementById('rules-btn');
 const skillListBtn = document.getElementById('skill-list-btn');
 const backToStartBtnRules = document.getElementById('back-to-start-btn-rules');
 const backToStartBtnSkills = document.getElementById('back-to-start-btn-skills');
-const startGameFromInitialSkillsBtn = document.getElementById('start-game-from-initial-skills');
+const startGameFromInitialSkillsBtn = document.getElementById('start-game-from-initial-skills'); // 「じゃんけん開始！」ボタン
 
 const stageInfo = document.getElementById('stage-info');
 const messageDisplay = document.getElementById('message');
@@ -70,9 +70,7 @@ function setupNewGame() {
     cpuHandDisplay.textContent = '?';
     playerHandDisplay.textContent = '?';
     resultDisplay.textContent = '';
-    updateSkillsDisplay();
-    enableJankenButtons(true);
-    resetGameBtn.style.display = 'none';
+    updateSkillsDisplay(); // 所持スキル表示を更新
 
     // 最初のステージで3つのスキルを付与
     const grantedSkills = getRandomSkills(3);
@@ -89,6 +87,8 @@ function displayInitialSkills(skills) {
         initialSkillsList.appendChild(li);
     });
     showScreen(initialSkillDisplayScreen); // 最初のスキル確認画面を表示
+    // この時点ではじゃんけんボタンは無効のまま
+    enableJankenButtons(false);
 }
 
 // スキル選択画面を表示
@@ -104,6 +104,8 @@ function showSkillSelection() {
         skillButton.onclick = () => selectSkill(skill);
         skillOptionsDiv.appendChild(skillButton);
     });
+    // スキル選択中はじゃんけんボタンを無効化
+    enableJankenButtons(false);
 }
 
 // ランダムなスキルを取得
@@ -118,7 +120,8 @@ function selectSkill(skill) {
     updateSkillsDisplay();
     showScreen(gameArea); // ゲーム画面に戻る
     messageDisplay.textContent = `「${skill.name}」を獲得しました！じゃんけん…ポン！`;
-    enableJankenButtons(true); // スキル選択後にじゃんけんを再開
+    // スキル選択後にじゃんけんボタンを有効化
+    enableJankenButtons(true);
 }
 
 // 所持スキルの表示を更新
@@ -128,6 +131,7 @@ function updateSkillsDisplay() {
         return;
     }
 
+    // 古いスキルボタンをクリア
     skillsDisplay.innerHTML = `使用可能回数: ${availableSkillSlots}<br>`;
     playerSkills.forEach((skill, index) => {
         const skillBtn = document.createElement('button');
@@ -154,6 +158,9 @@ async function useSkill(skillIndex) {
 
     let usedSkillSuccessfully = false;
 
+    // スキル使用中はじゃんけんボタンを一時的に無効化
+    enableJankenButtons(false);
+
     switch (skill.type) {
         case 'predict':
             // 相手の手を事前に知る（ここではCPUの手を先に決めて表示する）
@@ -162,18 +169,21 @@ async function useSkill(skillIndex) {
             cpuHandDisplay.dataset.predictedHand = cpuHandIndex; // データ属性に保存
             messageDisplay.textContent += 'あなたの手を選んでください。';
             usedSkillSuccessfully = true;
+            enableJankenButtons(true); // 予測後、手を選べるように有効化
             break;
         case 'force_win':
             // 強制勝利フラグをセット
             messageDisplay.textContent += '次の一手でじゃんけんに強制的に勝利します！';
             playerHandDisplay.dataset.forceWin = 'true';
             usedSkillSuccessfully = true;
+            enableJankenButtons(true); // スキル使用後、手を選べるように有効化
             break;
         case 're_janken':
             // あいこ無効化フラグをセット
             messageDisplay.textContent += 'あいこになった場合、手を選び直せます。';
             playerHandDisplay.dataset.reJanken = 'true';
             usedSkillSuccessfully = true;
+            enableJankenButtons(true); // スキル使用後、手を選べるように有効化
             break;
         case 'disable_cpu_skill':
             messageDisplay.textContent += '相手のスキルを封じました！';
@@ -181,22 +191,28 @@ async function useSkill(skillIndex) {
             cpuSkills = []; // CPUが所持するスキルを空にする（もしあれば）
             cpuSkillUsageCount = 3; // CPUはもうスキルを使えない状態にする
             usedSkillSuccessfully = true;
+            enableJankenButtons(true); // スキル使用後、手を選べるように有効化
             break;
         case 'recharge_skill_slot':
             availableSkillSlots++; // スキル使用回数を回復
             messageDisplay.textContent += 'スキル使用回数が1回復しました！';
             usedSkillSuccessfully = true;
+            enableJankenButtons(true); // スキル使用後、手を選べるように有効化
             break;
         default:
             messageDisplay.textContent = '不明なスキルです。';
             availableSkillSlots++; // 未知のスキルは使用回数を戻す
+            enableJankenButtons(true); // スキルが不明でも手を選べるように有効化
             break;
     }
 
     if (usedSkillSuccessfully) {
-        playerSkills.splice(skillIndex, 1); // 使用済みのスキルを削除
+        // 使用済みのスキルを削除するが、スキルチャージの場合は削除しない
+        if (skill.type !== 'recharge_skill_slot') {
+            playerSkills.splice(skillIndex, 1);
+        }
     } else {
-        availableSkillSlots++; // スキルが使用されなかった場合は戻す
+        availableSkillSlots++; // スキルが使用されなかった場合は使用回数を戻す
     }
     updateSkillsDisplay();
 }
@@ -236,15 +252,11 @@ function playJanken(playerChoice) {
             if (cpuSkill.type === 'force_win') {
                 // CPUが強制勝利スキルを使った場合、プレイヤーの手に関わらずCPUが勝つように調整
                 const winningHandIndex = (cpuHandIndex + 1) % 3; // CPUの手に対して勝つ手
-                playerChoice = winningHandIndex; // プレイヤーの手を負ける手に変更
+                playerChoice = winningHandIndex; // プレイヤーの手を負ける手に変更 (強制的に負けさせる)
                 messageDisplay.textContent += 'CPUが強制的に勝利します！';
             } else if (cpuSkill.type === 're_janken') {
-                // CPUがあいこを無効化する場合
-                // あいこになったらCPUの手を再選択するが、このロジックでは複雑になるため、
-                // 今回はCPUが強制勝利スキルを使った時のみ考慮する
                 messageDisplay.textContent += 'しかし、効果がないようだ…（簡略化のためこのスキルは強制勝利以外は未実装）';
             } else if (cpuSkill.type === 'disable_cpu_skill') {
-                 // 相手のスキルを封じるスキルはCPUには実質的に影響なし
                  messageDisplay.textContent += 'CPUは既にスキルを使い切っているか、効果が薄いようだ…。';
             }
         }
@@ -322,7 +334,7 @@ function displayAllSkills() {
 
 // イベントリスナー
 startGameBtn.addEventListener('click', () => {
-    setupNewGame(); // ゲーム開始ボタンが押されたらゲームの準備を開始
+    setupNewGame(); // ホーム画面の「ゲーム開始」ボタンが押されたらゲームの準備を開始
 });
 
 rulesBtn.addEventListener('click', () => {
@@ -336,9 +348,11 @@ skillListBtn.addEventListener('click', () => {
 backToStartBtnRules.addEventListener('click', () => showScreen(startScreen));
 backToStartBtnSkills.addEventListener('click', () => showScreen(startScreen));
 
-// 最初のスキル確認後、じゃんけんゲーム本編を開始
+// 最初のスキル確認後、「じゃんけん開始！」ボタンでゲーム本編を開始
 startGameFromInitialSkillsBtn.addEventListener('click', () => {
     showScreen(gameArea); // ゲーム本体の画面を表示
+    // ここでじゃんけんボタンを有効化することが重要
+    enableJankenButtons(true);
 });
 
 // ゲームオーバー後のリセットボタン
