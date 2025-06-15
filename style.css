@@ -52,12 +52,9 @@ h2 {
 }
 
 .hidden {
-    opacity: 0; /* 非表示時は透明 */
-    pointer-events: none; /* 非表示時はクリック不可にする */
-    /* display: none; はtransitionが効かないので、遅延して適用するか、
-       opacityとpointer-eventsで制御するのが一般的 */
-    /* ただし、完全にレイアウトから消したい場合はdisplay: none;も必要になる */
-    /* 今回は重ねて表示し、クリックイベントを無効化する方式で試します */
+    visibility: hidden; /* レイアウトは保持しつつ非表示 */
+    opacity: 0;         /* 透明にする */
+    pointer-events: none; /* クリックイベントを無効化する */
 }
 
 #start-screen {
@@ -295,22 +292,12 @@ h2 {
     background-color: #5a6268;
 }
 
-.hidden {
-    /* display: none; はトランジションが効かないため、
-       visibilityとopacity、pointer-eventsを組み合わせることで
-       フェードイン・アウトとクリック無効化を実現する */
-    visibility: hidden;
-    opacity: 0;
-    pointer-events: none; /* 要素が透明でもクリックイベントを拾わないようにする */
-}
-
 
 /* スキル選択画面 */
 #skill-selection-area {
     background-color: #e9ecef;
     padding: 20px;
     border-radius: 8px;
-    /* screenクラスが既に絶対配置しているので、margin-topは不要 */
 }
 
 #skill-options {
@@ -318,7 +305,7 @@ h2 {
     flex-direction: column;
     gap: 10px;
     margin-top: 15px;
-    width: 100%; /* 親要素に合わせる */
+    width: 100%;
 }
 
 .skill-option-btn {
