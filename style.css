@@ -16,6 +16,7 @@ body {
     text-align: center;
     width: 90%;
     max-width: 600px;
+    position: relative; /* 子要素のabsolute配置のために必要 */
 }
 
 h1 {
@@ -23,6 +24,117 @@ h1 {
     margin-bottom: 20px;
 }
 
+h2 {
+    color: #555;
+    margin-bottom: 15px;
+}
+
+/* 各画面の基本スタイル */
+.screen {
+    width: 100%;
+    height: 100%; /* 親要素の高さに合わせる */
+    /* position: absolute; */ /* 複数の画面が重なる場合に使う。今回はシンプルにdisplay:noneで切り替え */
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#start-screen {
+    /* スタート画面の特定スタイル */
+    padding: 20px;
+}
+
+.menu-buttons {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.menu-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: background-color 0.3s ease;
+    width: 80%; /* ボタン幅を調整 */
+    max-width: 250px;
+    margin: 0 auto;
+}
+
+.menu-btn:hover {
+    background-color: #0056b3;
+}
+
+.back-btn {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.back-btn:hover {
+    background-color: #5a6268;
+}
+
+/* ルール説明とスキルリストの画面 */
+#rules-screen, #skill-list-screen {
+    text-align: left;
+    padding: 20px;
+}
+
+#rules-screen ul {
+    list-style-type: disc;
+    margin-left: 20px;
+    padding-left: 0;
+}
+
+#rules-screen li {
+    margin-bottom: 8px;
+}
+
+#all-skills-display p {
+    margin-bottom: 10px;
+    border-bottom: 1px dashed #eee;
+    padding-bottom: 5px;
+}
+#all-skills-display p:last-child {
+    border-bottom: none;
+}
+
+/* 最初のスキル獲得画面 */
+#initial-skill-display-screen {
+    padding: 20px;
+}
+
+#initial-skills-list {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+#initial-skills-list li {
+    background-color: #e9f5ff;
+    border: 1px solid #cceeff;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+
+/* 既存のゲームエリアのスタイルはそのまま */
 #stage-info-container {
     margin-bottom: 15px;
     font-size: 1.2em;
@@ -30,7 +142,7 @@ h1 {
     color: #555;
 }
 
-#game-area {
+#game-main-content {
     margin-top: 20px;
 }
 
@@ -43,7 +155,7 @@ h1 {
 .janken-main-area {
     display: flex;
     justify-content: space-around;
-    align-items: flex-start; /* 縦方向の配置を調整 */
+    align-items: flex-start;
     margin-bottom: 30px;
 }
 
@@ -51,7 +163,7 @@ h1 {
     border: 1px solid #ddd;
     padding: 15px;
     border-radius: 8px;
-    flex: 1; /* 等しい幅 */
+    flex: 1;
     margin: 0 10px;
 }
 
@@ -70,7 +182,7 @@ h1 {
 #result {
     font-size: 1.5em;
     font-weight: bold;
-    color: #dc3545; /* 負けた時など */
+    color: #dc3545;
     margin-top: 15px;
 }
 
@@ -103,7 +215,7 @@ h1 {
     margin-top: 20px;
     border-top: 1px dashed #eee;
     padding-top: 15px;
-    text-align: left; /* スキル表示を左寄せ */
+    text-align: left;
 }
 
 .player-skill-btn {
@@ -111,7 +223,7 @@ h1 {
     color: white;
     border: none;
     padding: 8px 15px;
-    margin: 5px 5px 5px 0; /* 右と下に少しマージン */
+    margin: 5px 5px 5px 0;
     border-radius: 5px;
     cursor: pointer;
     font-size: 0.9em;
