@@ -58,8 +58,8 @@ function showScreen(screenToShow) {
     });
 }
 
-// ゲーム初期化（スタート画面から開始される）
-function initializeGame() {
+// ゲームの状態をリセットし、最初のスキルを付与
+function setupNewGame() {
     currentStage = 1;
     playerSkills = [];
     availableSkillSlots = 3;
@@ -88,7 +88,7 @@ function displayInitialSkills(skills) {
         li.textContent = `${skill.name}: ${skill.description}`;
         initialSkillsList.appendChild(li);
     });
-    showScreen(initialSkillDisplayScreen);
+    showScreen(initialSkillDisplayScreen); // 最初のスキル確認画面を表示
 }
 
 // スキル選択画面を表示
@@ -321,7 +321,10 @@ function displayAllSkills() {
 }
 
 // イベントリスナー
-startGameBtn.addEventListener('click', initializeGame); // ゲーム開始ボタン
+startGameBtn.addEventListener('click', () => {
+    setupNewGame(); // ゲーム開始ボタンが押されたらゲームの準備を開始
+});
+
 rulesBtn.addEventListener('click', () => {
     showScreen(rulesScreen);
 });
@@ -332,12 +335,16 @@ skillListBtn.addEventListener('click', () => {
 
 backToStartBtnRules.addEventListener('click', () => showScreen(startScreen));
 backToStartBtnSkills.addEventListener('click', () => showScreen(startScreen));
-startGameFromInitialSkillsBtn.addEventListener('click', () => showScreen(gameArea)); // 最初のスキル確認後ゲーム開始
 
-rockBtn.addEventListener('click', () => playJanken(0));
-scissorsBtn.addEventListener('click', () => playJanken(1));
-paperBtn.addEventListener('click', () => playJanken(2));
-resetGameBtn.addEventListener('click', initializeGame); // ゲームオーバー後のリセットボタン
+// 最初のスキル確認後、じゃんけんゲーム本編を開始
+startGameFromInitialSkillsBtn.addEventListener('click', () => {
+    showScreen(gameArea); // ゲーム本体の画面を表示
+});
+
+// ゲームオーバー後のリセットボタン
+resetGameBtn.addEventListener('click', () => {
+    showScreen(startScreen); // リセットボタンでスタート画面に戻る
+});
 
 // 最初にスタート画面を表示
 showScreen(startScreen);
