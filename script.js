@@ -6,6 +6,20 @@ let cpuSkills = [];
 let cpuSkillUsageCount = 0; // CPUのスキル使用回数（各ステージで3回まで）
 
 // DOM要素の取得
+const startScreen = document.getElementById('start-screen');
+const rulesScreen = document.getElementById('rules-screen');
+const skillListScreen = document.getElementById('skill-list-screen');
+const gameArea = document.getElementById('game-area');
+const skillSelectionArea = document.getElementById('skill-selection-area');
+const initialSkillDisplayScreen = document.getElementById('initial-skill-display-screen');
+
+const startGameBtn = document.getElementById('start-game-btn');
+const rulesBtn = document.getElementById('rules-btn');
+const skillListBtn = document.getElementById('skill-list-btn');
+const backToStartBtnRules = document.getElementById('back-to-start-btn-rules');
+const backToStartBtnSkills = document.getElementById('back-to-start-btn-skills');
+const startGameFromInitialSkillsBtn = document.getElementById('start-game-from-initial-skills');
+
 const stageInfo = document.getElementById('stage-info');
 const messageDisplay = document.getElementById('message');
 const cpuHandDisplay = document.getElementById('cpu-hand');
@@ -16,9 +30,9 @@ const scissorsBtn = document.getElementById('scissors');
 const paperBtn = document.getElementById('paper');
 const skillsDisplay = document.getElementById('skills-display');
 const resetGameBtn = document.getElementById('reset-game');
-const gameArea = document.getElementById('game-area');
-const skillSelectionArea = document.getElementById('skill-selection-area');
 const skillOptionsDiv = document.getElementById('skill-options');
+const allSkillsDisplay = document.getElementById('all-skills-display'); // スキルリスト表示用
+const initialSkillsList = document.getElementById('initial-skills-list'); // 最初のスキル表示用
 
 // じゃんけんの手
 const hands = ['グー', 'チョキ', 'パー'];
@@ -32,12 +46,24 @@ const allSkills = [
     { name: 'スキルチャージ', description: 'スキル使用回数を1回復する。', type: 'recharge_skill_slot', effect: null },
 ];
 
-// ゲーム初期化
+// 画面表示を切り替える汎用関数
+function showScreen(screenToShow) {
+    const screens = [startScreen, rulesScreen, skillListScreen, gameArea, skillSelectionArea, initialSkillDisplayScreen];
+    screens.forEach(screen => {
+        if (screen === screenToShow) {
+            screen.classList.remove('hidden');
+        } else {
+            screen.classList.add('hidden');
+        }
+    });
+}
+
+// ゲーム初期化（スタート画面から開始される）
 function initializeGame() {
     currentStage = 1;
     playerSkills = [];
     availableSkillSlots = 3;
-    cpuSkills = [];
+    cpuSkills = []; // CPUスキルをクリア
     cpuSkillUsageCount = 0;
     stageInfo.textContent = `ステージ: ${currentStage}`;
     messageDisplay.textContent = 'じゃんけん…ポン！';
@@ -47,25 +73,27 @@ function initializeGame() {
     updateSkillsDisplay();
     enableJankenButtons(true);
     resetGameBtn.style.display = 'none';
-    gameArea.classList.remove('hidden');
-    skillSelectionArea.classList.add('hidden');
 
     // 最初のステージで3つのスキルを付与
-    grantInitialSkills();
+    const grantedSkills = getRandomSkills(3);
+    grantedSkills.forEach(skill => playerSkills.push(skill));
+    displayInitialSkills(grantedSkills); // 獲得スキルを表示する画面へ
 }
 
-// 最初のステージでスキルを付与する関数
-function grantInitialSkills() {
-    const selectedSkills = getRandomSkills(3);
-    selectedSkills.forEach(skill => playerSkills.push(skill));
-    updateSkillsDisplay();
-    messageDisplay.textContent = '最初のスキルを獲得しました！じゃんけん…ポン！';
+// 獲得した最初のスキルを表示
+function displayInitialSkills(skills) {
+    initialSkillsList.innerHTML = '';
+    skills.forEach(skill => {
+        const li = document.createElement('li');
+        li.textContent = `${skill.name}: ${skill.description}`;
+        initialSkillsList.appendChild(li);
+    });
+    showScreen(initialSkillDisplayScreen);
 }
 
 // スキル選択画面を表示
 function showSkillSelection() {
-    gameArea.classList.add('hidden');
-    skillSelectionArea.classList.remove('hidden');
+    showScreen(skillSelectionArea);
     skillOptionsDiv.innerHTML = ''; // 以前の選択肢をクリア
 
     const randomSkills = getRandomSkills(3);
@@ -88,8 +116,7 @@ function getRandomSkills(count) {
 function selectSkill(skill) {
     playerSkills.push(skill);
     updateSkillsDisplay();
-    gameArea.classList.remove('hidden');
-    skillSelectionArea.classList.add('hidden');
+    showScreen(gameArea); // ゲーム画面に戻る
     messageDisplay.textContent = `「${skill.name}」を獲得しました！じゃんけん…ポン！`;
     enableJankenButtons(true); // スキル選択後にじゃんけんを再開
 }
@@ -150,8 +177,9 @@ async function useSkill(skillIndex) {
             break;
         case 'disable_cpu_skill':
             messageDisplay.textContent += '相手のスキルを封じました！';
-            cpuSkills = []; // CPUスキルを一時的に空にする
-            cpuSkillUsageCount = 3; // CPUはもうスキルを使えない
+            // CPUのスキル使用をリセット/無効化する
+            cpuSkills = []; // CPUが所持するスキルを空にする（もしあれば）
+            cpuSkillUsageCount = 3; // CPUはもうスキルを使えない状態にする
             usedSkillSuccessfully = true;
             break;
         case 'recharge_skill_slot':
@@ -282,11 +310,34 @@ function playJanken(playerChoice) {
     }, 1500); // 結果表示後に少し待つ
 }
 
+// スキルリストを表示する関数
+function displayAllSkills() {
+    allSkillsDisplay.innerHTML = ''; // クリア
+    allSkills.forEach(skill => {
+        const p = document.createElement('p');
+        p.innerHTML = `<strong>${skill.name}</strong>: ${skill.description}`;
+        allSkillsDisplay.appendChild(p);
+    });
+}
+
 // イベントリスナー
+startGameBtn.addEventListener('click', initializeGame); // ゲーム開始ボタン
+rulesBtn.addEventListener('click', () => {
+    showScreen(rulesScreen);
+});
+skillListBtn.addEventListener('click', () => {
+    displayAllSkills(); // スキルリストを生成
+    showScreen(skillListScreen);
+});
+
+backToStartBtnRules.addEventListener('click', () => showScreen(startScreen));
+backToStartBtnSkills.addEventListener('click', () => showScreen(startScreen));
+startGameFromInitialSkillsBtn.addEventListener('click', () => showScreen(gameArea)); // 最初のスキル確認後ゲーム開始
+
 rockBtn.addEventListener('click', () => playJanken(0));
 scissorsBtn.addEventListener('click', () => playJanken(1));
 paperBtn.addEventListener('click', () => playJanken(2));
-resetGameBtn.addEventListener('click', initializeGame);
+resetGameBtn.addEventListener('click', initializeGame); // ゲームオーバー後のリセットボタン
 
-// ゲーム開始
-initializeGame();
+// 最初にスタート画面を表示
+showScreen(startScreen);
