@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スキルじゃんけんゲーム</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div id="stage-info-container">
+            <p id="stage-info">ステージ: 1</p>
+        </div>
+
+        <h1>スキルじゃんけんゲーム</h1>
+
+        <div id="game-area">
+            <p id="message">じゃんけん…ポン！</p>
+
+            <div class="janken-main-area">
+                <div class="opponent-display">
+                    <h2>相手</h2>
+                    <p id="cpu-hand">?</p>
+                </div>
+
+                <div class="player-display">
+                    <h2>あなた</h2>
+                    <p id="player-hand">?</p>
+                    <p id="result"></p>
+
+                    <div class="hands">
+                        <button id="rock" class="hand-btn">グー</button>
+                        <button id="scissors" class="hand-btn">チョキ</button>
+                        <button id="paper" class="hand-btn">パー</button>
+                    </div>
+
+                    <h2>所持スキル</h2>
+                    <div id="skills-display">
+                        <p>現在スキルはありません。</p>
+                    </div>
+                </div>
+            </div>
+            <button id="reset-game" style="display: none;">ゲームをリセット</button>
+        </div>
+
+        <div id="skill-selection-area" class="hidden">
+            <h2>スキル選択！</h2>
+            <p>新しいスキルを1つ選んでください。</p>
+            <div id="skill-options">
+                </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
