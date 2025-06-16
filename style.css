@@ -16,9 +16,10 @@ body {
     text-align: center;
     width: 90%;
     max-width: 600px;
-    position: relative; /* 子要素のabsolute配置のために必要 */
-    min-height: 500px; /* 画面が切り替わってもコンテナの高さが極端に変わらないように調整 */
-    overflow: hidden; /* コンテナからはみ出る要素を隠す */
+    position: relative;
+    /* min-height: 500px; */ /* この行を削除またはコメントアウト */
+    height: auto; /* コンテンツに合わせて高さを自動調整 */
+    overflow: hidden; /* 子要素のtransitionのために必要 */
 }
 
 h1 {
@@ -33,40 +34,49 @@ h2 {
 
 /* 各画面の基本スタイル */
 .screen {
-    position: absolute; /* これが重要！親要素 .container に対して絶対配置 */
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
-    display: flex; /* Flexboxを使ってコンテンツを中央に配置 */
+    /* height: 100%; */ /* この行を削除またはコメントアウト */
+    min-height: 100%; /* コンテナの最小高さを考慮 */
+    display: flex;
     flex-direction: column;
-    justify-content: center; /* 垂直方向中央揃え */
-    align-items: center; /* 水平方向中央揃え */
-    padding: 20px; /* 各画面内でのパディング */
-    box-sizing: border-box; /* paddingがwidth/heightに含まれるように */
-    background-color: #fff; /* 各画面の背景色を設定し、下の画面が透けないように */
-    border-radius: 10px; /* コンテナと同じ角丸にする */
-    transition: opacity 0.3s ease-in-out; /* フェードイン・アウトのアニメーション */
-    opacity: 1; /* 初期状態は表示 */
-    pointer-events: auto; /* クリック可能 */
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #fff;
+    border-radius: 10px;
+    transition: opacity 0.3s ease-in-out;
+    opacity: 1;
+    pointer-events: auto;
+    overflow-y: auto; /* コンテンツが画面からはみ出す場合にスクロールバーを表示 */
 }
 
 .hidden {
-    visibility: hidden; /* レイアウトは保持しつつ非表示 */
-    opacity: 0;         /* 透明にする */
-    pointer-events: none; /* クリックイベントを無効化する */
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
 }
 
 #start-screen {
-    z-index: 10; /* スタート画面を一番手前に */
+    z-index: 10;
 }
 
 #rules-screen, #skill-list-screen, #initial-skill-display-screen {
-    z-index: 9; /* メニュー画面をスタート画面の次に */
+    z-index: 9;
 }
 
 #game-area, #skill-selection-area {
-    z-index: 8; /* ゲーム画面系を一番奥に */
+    z-index: 8;
+    position: relative; /* ゲームエリア自身も相対位置に */
+    min-height: auto; /* コンテンツに合わせて高さを調整 */
+    height: auto; /* 明示的にautoを設定 */
+    justify-content: flex-start; /* コンテンツを上から表示 */
+    align-items: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 
@@ -75,8 +85,8 @@ h2 {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    width: 100%; /* ボタンのコンテナ幅 */
-    align-items: center; /* ボタンを中央揃え */
+    width: 100%;
+    align-items: center;
 }
 
 .menu-btn {
@@ -88,7 +98,7 @@ h2 {
     cursor: pointer;
     font-size: 1.2em;
     transition: background-color 0.3s ease;
-    width: 80%; /* ボタン幅を調整 */
+    width: 80%;
     max-width: 250px;
 }
 
@@ -115,15 +125,15 @@ h2 {
 /* ルール説明とスキルリストの画面 */
 #rules-screen, #skill-list-screen {
     text-align: left;
-    align-items: flex-start; /* ulやpのテキストを左寄せにするため */
-    justify-content: flex-start; /* 上寄せにするため */
+    align-items: flex-start;
+    justify-content: flex-start;
 }
 
 #rules-screen ul {
     list-style-type: disc;
     margin-left: 20px;
     padding-left: 0;
-    width: 100%; /* 親要素に合わせる */
+    width: 100%;
 }
 
 #rules-screen li {
@@ -131,7 +141,7 @@ h2 {
 }
 
 #all-skills-display {
-    width: 100%; /* 親要素に合わせる */
+    width: 100%;
 }
 
 #all-skills-display p {
@@ -153,7 +163,7 @@ h2 {
     padding: 0;
     margin-top: 20px;
     margin-bottom: 30px;
-    width: 100%; /* 親要素に合わせる */
+    width: 100%;
 }
 
 #initial-skills-list li {
@@ -162,29 +172,24 @@ h2 {
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 5px;
-    text-align: left; /* テキストを左寄せ */
+    text-align: left;
 }
 
 
 /* 既存のゲームエリアのスタイルはそのまま（ただし、screenクラスの絶対配置が適用される） */
-#game-area {
-    justify-content: flex-start; /* ゲーム内容を上から表示 */
-    align-items: center; /* 水平方向中央揃え */
-    padding-top: 20px; /* 必要に応じて調整 */
-    padding-bottom: 20px; /* 必要に応じて調整 */
-}
+/* #game-area のスタイルは screen に統合し、特殊な設定は上記に記述 */
 
 #stage-info-container {
     margin-bottom: 15px;
     font-size: 1.2em;
     font-weight: bold;
     color: #555;
-    width: 100%; /* 親要素に合わせる */
+    width: 100%;
 }
 
 #game-main-content {
     margin-top: 20px;
-    width: 100%; /* 親要素に合わせる */
+    width: 100%;
 }
 
 #message {
@@ -198,7 +203,7 @@ h2 {
     justify-content: space-around;
     align-items: flex-start;
     margin-bottom: 30px;
-    width: 100%; /* 親要素に合わせる */
+    width: 100%;
 }
 
 .opponent-display, .player-display {
@@ -298,6 +303,9 @@ h2 {
     background-color: #e9ecef;
     padding: 20px;
     border-radius: 8px;
+    position: relative; /* スキル選択画面も相対位置に */
+    min-height: auto; /* コンテンツに合わせて高さを調整 */
+    height: auto; /* 明示的にautoを設定 */
 }
 
 #skill-options {
