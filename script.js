@@ -135,7 +135,7 @@ function selectSkill(skill) {
     messageDisplay.textContent = `「${skill.name}」を獲得しました！じゃんけん…ポン！`;
     // スキル選択後にじゃんけんボタンを有効化
     enableJankenButtons(true);
-    console.log("selectSkill: じゃんけんボタンを有効化");
+    console.log("selectSkill: じゃけんボタンを有効化");
 }
 
 // 所持スキルの表示を更新
