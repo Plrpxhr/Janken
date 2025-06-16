@@ -3,7 +3,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* 画面全体の高さを確保 */
+    min-height: 100vh;
     background-color: #f0f0f0;
     margin: 0;
 }
@@ -20,8 +20,8 @@ body {
     height: auto; /* コンテンツに合わせて高さを自動調整 */
     min-height: 400px; /* 最小高さを設定し、内容が少ない場合でも極端に小さくならないように */
     overflow: hidden; /* 子要素のtransitionのために必要 */
-    display: flex; /* コンテナ自体もFlexboxに */
-    flex-direction: column; /* 内部要素を縦に並べる */
+    display: flex;
+    flex-direction: column;
     justify-content: flex-start; /* 上から配置 */
 }
 
@@ -41,11 +41,10 @@ h2 {
     top: 0;
     left: 0;
     width: 100%;
-    /* min-height: 100%; */ /* 親（.container）のFlexboxで制御するため削除 */
     height: 100%; /* 親の高さに合わせて広がる */
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: center; /* 画面の内容を垂直方向中央揃えに */
     align-items: center;
     padding: 20px;
     box-sizing: border-box;
@@ -74,15 +73,21 @@ h2 {
 #game-area, #skill-selection-area {
     z-index: 8;
     position: relative;
-    /* min-height: auto; */ /* screenのheight:100%で十分 */
-    /* height: auto; */    /* screenのheight:100%で十分 */
     flex-grow: 1; /* 親（.container）の残りのスペースを占める */
-    justify-content: flex-start;
+    justify-content: flex-start; /* これによりゲーム要素は上から順に配置 */
     align-items: center;
     padding-top: 20px;
     padding-bottom: 20px;
 }
 
+/* ゲームエリア内の主要コンテンツをまとめるFlexboxコンテナ */
+#game-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%; /* 親の幅いっぱいに広げる */
+    align-items: center; /* 中央揃え */
+    padding-bottom: 20px; /* ゲームエリアの下部に少し余白を追加 */
+}
 
 .menu-buttons {
     margin-top: 30px;
@@ -130,7 +135,7 @@ h2 {
 #rules-screen, #skill-list-screen {
     text-align: left;
     align-items: flex-start;
-    justify-content: flex-start;
+    justify-content: flex-start; /* 上からコンテンツを配置 */
 }
 
 #rules-screen ul {
@@ -186,9 +191,6 @@ h2 {
 }
 
 
-/* 既存のゲームエリアのスタイルはそのまま（ただし、screenクラスの絶対配置が適用される） */
-/* #game-area のスタイルは screen に統合し、特殊な設定は上記に記述 */
-
 #stage-info-container {
     margin-bottom: 15px;
     font-size: 1.2em;
@@ -210,23 +212,23 @@ h2 {
 
 .janken-main-area {
     display: flex;
-    justify-content: center; /* 中央に寄せる */
+    justify-content: center;
     align-items: flex-start;
     margin-bottom: 30px;
     width: 100%;
-    flex-wrap: wrap; /* 狭い画面で折り返す */
-    gap: 20px; /* 要素間の隙間 */
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
 .opponent-display, .player-display {
     border: 1px solid #ddd;
     padding: 15px;
     border-radius: 8px;
-    flex: 1; /* 親要素の幅に合わせて伸縮 */
-    min-width: 120px; /* 最小幅を設定して小さくなりすぎないように */
-    max-width: 250px; /* 最大幅を設定 */
-    margin: 0 10px; /* 左右のマージン */
-    box-sizing: border-box; /* paddingとborderを幅に含める */
+    flex: 1;
+    min-width: 120px;
+    max-width: 250px;
+    margin: 0 10px;
+    box-sizing: border-box;
 }
 
 .opponent-display h2, .player-display h2 {
@@ -250,10 +252,10 @@ h2 {
 
 .hands {
     margin-top: 20px;
-    display: flex; /* Flexboxを適用 */
-    flex-wrap: wrap; /* ボタンが複数行になる場合を考慮 */
-    justify-content: center; /* ボタンを中央揃え */
-    gap: 10px; /* ボタン間の隙間 */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
 }
 
 .hand-btn {
@@ -265,10 +267,10 @@ h2 {
     cursor: pointer;
     font-size: 1.1em;
     transition: background-color 0.3s ease;
-    flex-grow: 1; /* ボタンが均等に幅を取るように */
-    min-width: 80px; /* ボタンの最小幅 */
-    max-width: 120px; /* ボタンの最大幅 */
-    box-sizing: border-box; /* paddingとborderを幅に含める */
+    flex-grow: 1;
+    min-width: 80px;
+    max-width: 120px;
+    box-sizing: border-box;
 }
 
 .hand-btn:hover:not(:disabled) {
@@ -285,20 +287,21 @@ h2 {
     border-top: 1px dashed #eee;
     padding-top: 15px;
     text-align: left;
-    max-height: 180px; /* 少し高さを増やす */
-    overflow-y: auto; /* 溢れたらスクロール */
-    padding-right: 10px; /* スクロールバーとの重なりを防ぐ */
-    display: flex; /* Flexboxを適用 */
-    flex-direction: column; /* 縦方向に要素を並べる */
-    gap: 8px; /* 要素間の隙間 */
+    max-height: 180px;
+    overflow-y: auto;
+    padding-right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 /* 所持スキルボタンのコンテナ */
 #skill-buttons-container {
     display: flex;
-    flex-wrap: wrap; /* ボタンを折り返す */
-    gap: 8px; /* ボタン間の隙間 */
-    align-items: flex-start; /* ボタンを上揃えにする */
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: flex-start;
+    justify-content: center; /* ここを追加: スキルボタン全体を中央揃えに */
 }
 
 
@@ -306,18 +309,19 @@ h2 {
     background-color: #007bff;
     color: white;
     border: none;
-    padding: 8px 10px; /* 左右のパディングを少し減らす */
+    padding: 8px 10px;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 0.85em; /* フォントサイズを少し小さくする */
+    font-size: 0.85em;
     transition: background-color 0.3s ease;
-    white-space: normal; /* テキストを折り返すように設定 */
-    overflow: hidden; /* 溢れたテキストは非表示 */
-    text-overflow: ellipsis; /* 溢れたテキストを...で表示 (複数行には非対応) */
-    flex-shrink: 0; /* スキルボタンが縮小しないようにする（重要） */
-    max-width: 150px; /* 最大幅を設定して広がりすぎないように */
-    min-width: 80px; /* 最小幅も設定 */
-    height: auto; /* 高さもコンテンツに合わせて自動調整 */
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 0;
+    max-width: 150px;
+    min-width: 80px;
+    height: auto;
+    box-sizing: border-box; /* パディングとボーダーを幅に含める */
 }
 
 .player-skill-btn:hover {
@@ -326,8 +330,10 @@ h2 {
 
 /* スキルがない場合の表示 */
 #skills-display p {
-    margin: 0; /* マージンをリセット */
+    margin: 0;
     padding: 0;
+    text-align: center; /* 中央揃えにする */
+    width: 100%; /* 親の幅いっぱいに広げる */
 }
 
 #reset-game {
@@ -353,8 +359,9 @@ h2 {
     padding: 20px;
     border-radius: 8px;
     position: relative;
-    min-height: auto;
-    height: auto;
+    /* min-height: auto; */ /* screenのheight:100%で十分 */
+    /* height: auto; */    /* screenのheight:100%で十分 */
+    flex-grow: 1; /* 親（.container）の残りのスペースを占める */
 }
 
 #skill-options {
@@ -375,8 +382,8 @@ h2 {
     font-size: 1em;
     transition: background-color 0.3s ease;
     text-align: left;
-    width: 100%; /* ボタンの幅を100%に */
-    box-sizing: border-box; /* paddingを幅に含める */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .skill-option-btn:hover {
