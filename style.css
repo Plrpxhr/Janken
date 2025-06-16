@@ -3,9 +3,11 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    /* min-height: 100vh; */ /* bodyのmin-heightを削除し、必要に応じてスクロールするようにする */
+    height: 100vh; /* 画面の高さに合わせる */
     background-color: #f0f0f0;
     margin: 0;
+    overflow-y: auto; /* body全体でスクロールを許可 */
 }
 
 .container {
@@ -17,12 +19,13 @@ body {
     width: 90%;
     max-width: 600px;
     position: relative;
-    height: auto; /* コンテンツに合わせて高さを自動調整 */
-    min-height: 400px; /* 最小高さを設定し、内容が少ない場合でも極端に小さくならないように */
-    overflow: hidden; /* 子要素のtransitionのために必要 */
+    /* height: auto; */ /* 削除: Flexgrowで高さを調整 */
+    min-height: 400px;
+    max-height: 95vh; /* 画面の高さの95%を最大とする */
+    overflow: hidden; /* transitionのため維持 */
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* 上から配置 */
+    justify-content: flex-start;
 }
 
 h1 {
@@ -44,7 +47,7 @@ h2 {
     height: 100%; /* 親の高さに合わせて広がる */
     display: flex;
     flex-direction: column;
-    justify-content: center; /* 画面の内容を垂直方向中央揃えに */
+    justify-content: center;
     align-items: center;
     padding: 20px;
     box-sizing: border-box;
@@ -73,20 +76,20 @@ h2 {
 #game-area, #skill-selection-area {
     z-index: 8;
     position: relative;
-    flex-grow: 1; /* 親（.container）の残りのスペースを占める */
-    justify-content: flex-start; /* これによりゲーム要素は上から順に配置 */
+    flex-grow: 1;
+    justify-content: flex-start;
     align-items: center;
     padding-top: 20px;
-    padding-bottom: 20px;
+    padding-bottom: 20px; /* ここに余白を持たせる */
 }
 
 /* ゲームエリア内の主要コンテンツをまとめるFlexboxコンテナ */
 #game-content-wrapper {
     display: flex;
     flex-direction: column;
-    width: 100%; /* 親の幅いっぱいに広げる */
-    align-items: center; /* 中央揃え */
-    padding-bottom: 20px; /* ゲームエリアの下部に少し余白を追加 */
+    width: 100%;
+    align-items: center;
+    flex-grow: 1; /* コンテンツが残りのスペースを埋めるようにする */
 }
 
 .menu-buttons {
@@ -135,7 +138,7 @@ h2 {
 #rules-screen, #skill-list-screen {
     text-align: left;
     align-items: flex-start;
-    justify-content: flex-start; /* 上からコンテンツを配置 */
+    justify-content: flex-start;
 }
 
 #rules-screen ul {
@@ -151,9 +154,9 @@ h2 {
 
 #all-skills-display {
     width: 100%;
-    max-height: 250px; /* スキルリストの最大高さを設定 */
-    overflow-y: auto; /* 溢れたらスクロール */
-    border: 1px solid #eee; /* 見た目のために枠線を追加 */
+    max-height: 250px;
+    overflow-y: auto;
+    border: 1px solid #eee;
     padding: 10px;
     box-sizing: border-box;
     border-radius: 5px;
@@ -202,6 +205,10 @@ h2 {
 #game-main-content {
     margin-top: 20px;
     width: 100%;
+    flex-grow: 1; /* コンテンツが残りのスペースを埋めるようにする */
+    display: flex; /* Flexboxを適用 */
+    flex-direction: column; /* 要素を縦に並べる */
+    justify-content: flex-start; /* 上から配置 */
 }
 
 #message {
@@ -301,7 +308,7 @@ h2 {
     flex-wrap: wrap;
     gap: 8px;
     align-items: flex-start;
-    justify-content: center; /* ここを追加: スキルボタン全体を中央揃えに */
+    justify-content: center;
 }
 
 
@@ -321,7 +328,7 @@ h2 {
     max-width: 150px;
     min-width: 80px;
     height: auto;
-    box-sizing: border-box; /* パディングとボーダーを幅に含める */
+    box-sizing: border-box;
 }
 
 .player-skill-btn:hover {
@@ -332,8 +339,8 @@ h2 {
 #skills-display p {
     margin: 0;
     padding: 0;
-    text-align: center; /* 中央揃えにする */
-    width: 100%; /* 親の幅いっぱいに広げる */
+    text-align: center;
+    width: 100%;
 }
 
 #reset-game {
@@ -341,7 +348,7 @@ h2 {
     color: white;
     border: none;
     padding: 10px 20px;
-    margin-top: 30px;
+    margin-top: auto; /* これをautoにすることで、親要素の底に配置される */
     border-radius: 5px;
     cursor: pointer;
     font-size: 1em;
@@ -359,9 +366,7 @@ h2 {
     padding: 20px;
     border-radius: 8px;
     position: relative;
-    /* min-height: auto; */ /* screenのheight:100%で十分 */
-    /* height: auto; */    /* screenのheight:100%で十分 */
-    flex-grow: 1; /* 親（.container）の残りのスペースを占める */
+    flex-grow: 1;
 }
 
 #skill-options {
