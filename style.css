@@ -3,33 +3,32 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* min-height: 100vh; */ /* bodyのmin-heightを削除し、必要に応じてスクロールするようにする */
-    height: 100vh; /* 画面の高さに合わせる */
+    height: 100vh;
     background-color: #f0f0f0;
     margin: 0;
-    overflow-y: auto; /* body全体でスクロールを許可 */
+    overflow-y: auto;
 }
 
 .container {
     background-color: #fff;
-    padding: 30px;
+    padding: 20px 30px; /* 上部のパディングを減らし、左右は維持 */
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
     width: 90%;
     max-width: 600px;
     position: relative;
-    /* height: auto; */ /* 削除: Flexgrowで高さを調整 */
     min-height: 400px;
-    max-height: 95vh; /* 画面の高さの95%を最大とする */
-    overflow: hidden; /* transitionのため維持 */
+    max-height: 95vh;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: flex-start; /* コンテナ内の要素を上から配置 */
 }
 
 h1 {
     color: #333;
+    margin-top: 10px; /* 上のマージンを減らす */
     margin-bottom: 20px;
 }
 
@@ -44,19 +43,19 @@ h2 {
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%; /* 親の高さに合わせて広がる */
+    height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start; /* ★ここを変更: 垂直方向の上揃え★ */
     align-items: center;
-    padding: 20px;
+    padding: 20px; /* 各画面内でのパディングは維持 */
     box-sizing: border-box;
     background-color: #fff;
     border-radius: 10px;
     transition: opacity 0.3s ease-in-out;
     opacity: 1;
     pointer-events: auto;
-    overflow-y: auto; /* コンテンツが画面からはみ出す場合にスクロールバーを表示 */
+    overflow-y: auto;
 }
 
 .hidden {
@@ -77,10 +76,10 @@ h2 {
     z-index: 8;
     position: relative;
     flex-grow: 1;
-    justify-content: flex-start;
+    justify-content: flex-start; /* ゲーム画面は常に上から配置 */
     align-items: center;
     padding-top: 20px;
-    padding-bottom: 20px; /* ここに余白を持たせる */
+    padding-bottom: 20px;
 }
 
 /* ゲームエリア内の主要コンテンツをまとめるFlexboxコンテナ */
@@ -89,7 +88,8 @@ h2 {
     flex-direction: column;
     width: 100%;
     align-items: center;
-    flex-grow: 1; /* コンテンツが残りのスペースを埋めるようにする */
+    flex-grow: 1;
+    /* padding-bottom: 20px; */ /* game-areaのpadding-bottomで対応するため削除 */
 }
 
 .menu-buttons {
@@ -205,15 +205,16 @@ h2 {
 #game-main-content {
     margin-top: 20px;
     width: 100%;
-    flex-grow: 1; /* コンテンツが残りのスペースを埋めるようにする */
-    display: flex; /* Flexboxを適用 */
-    flex-direction: column; /* 要素を縦に並べる */
-    justify-content: flex-start; /* 上から配置 */
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }
 
 #message {
     font-size: 1.1em;
     color: #007bff;
+    margin-top: 0; /* メッセージの上マージンをなくす */
     margin-bottom: 20px;
 }
 
@@ -348,7 +349,7 @@ h2 {
     color: white;
     border: none;
     padding: 10px 20px;
-    margin-top: auto; /* これをautoにすることで、親要素の底に配置される */
+    margin-top: auto;
     border-radius: 5px;
     cursor: pointer;
     font-size: 1em;
