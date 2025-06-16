@@ -2,16 +2,17 @@ body {
     font-family: 'Arial', sans-serif;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* body内のcontainerを上部に寄せる */
     height: 100vh;
     background-color: #f0f0f0;
     margin: 0;
     overflow-y: auto;
+    padding-top: 20px; /* body全体の上部に少し余白 */
 }
 
 .container {
     background-color: #fff;
-    padding: 20px 30px; /* 上部のパディングを減らし、左右は維持 */
+    padding: 20px 30px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
@@ -23,17 +24,19 @@ body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* コンテナ内の要素を上から配置 */
+    justify-content: flex-start;
+    flex-shrink: 0; /* container自身が縮まないようにする */
 }
 
 h1 {
     color: #333;
-    margin-top: 10px; /* 上のマージンを減らす */
+    margin-top: 0; /* h1のデフォルトマージンをなくし、containerのpaddingに依存 */
     margin-bottom: 20px;
 }
 
 h2 {
     color: #555;
+    margin-top: 0; /* h2のデフォルトマージンをなくす */
     margin-bottom: 15px;
 }
 
@@ -46,9 +49,9 @@ h2 {
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* ★ここを変更: 垂直方向の上揃え★ */
+    justify-content: flex-start; /* ★重要: 全ての画面コンテンツを上部に寄せる★ */
     align-items: center;
-    padding: 20px; /* 各画面内でのパディングは維持 */
+    padding: 20px;
     box-sizing: border-box;
     background-color: #fff;
     border-radius: 10px;
@@ -75,11 +78,11 @@ h2 {
 #game-area, #skill-selection-area {
     z-index: 8;
     position: relative;
-    flex-grow: 1;
-    justify-content: flex-start; /* ゲーム画面は常に上から配置 */
+    flex-grow: 0; /* ★重要: このエリア自体が不必要に伸びないようにする★ */
+    justify-content: flex-start; /* ★上寄せを維持★ */
     align-items: center;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 0; /* game-area自体のpadding-topを0に */
+    padding-bottom: 0; /* game-area自体のpadding-bottomを0に */
 }
 
 /* ゲームエリア内の主要コンテンツをまとめるFlexboxコンテナ */
@@ -88,9 +91,10 @@ h2 {
     flex-direction: column;
     width: 100%;
     align-items: center;
-    flex-grow: 1;
-    /* padding-bottom: 20px; */ /* game-areaのpadding-bottomで対応するため削除 */
+    flex-grow: 1; /* コンテンツが利用可能なスペースを埋める（ただし、下部はリセットボタンが`margin-top:auto`で押しやる） */
+    padding-bottom: 20px; /* game-content-wrapperの下に余白を追加 */
 }
+
 
 .menu-buttons {
     margin-top: 30px;
@@ -195,6 +199,7 @@ h2 {
 
 
 #stage-info-container {
+    margin-top: 0; /* ステージ情報のマージンをなくす */
     margin-bottom: 15px;
     font-size: 1.2em;
     font-weight: bold;
@@ -203,9 +208,9 @@ h2 {
 }
 
 #game-main-content {
-    margin-top: 20px;
+    margin-top: 0; /* game-main-contentの上マージンをなくす */
     width: 100%;
-    flex-grow: 1;
+    flex-grow: 1; /* コンテンツが残りのスペースを埋めるようにする */
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -214,7 +219,7 @@ h2 {
 #message {
     font-size: 1.1em;
     color: #007bff;
-    margin-top: 0; /* メッセージの上マージンをなくす */
+    margin-top: 0;
     margin-bottom: 20px;
 }
 
@@ -367,15 +372,18 @@ h2 {
     padding: 20px;
     border-radius: 8px;
     position: relative;
-    flex-grow: 1;
+    flex-grow: 0; /* ★重要: このエリア自体が不必要に伸びないようにする★ */
+    justify-content: flex-start; /* ★上寄せを維持★ */
+    align-items: center; /* 内部要素を中央に揃える */
 }
 
 #skill-options {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-top: 15px;
+    margin-top: 15px; /* 上部のマージンを調整 */
     width: 100%;
+    /* flex-grow: 1; */ /* スキルオプションが不必要に伸びないように削除 */
 }
 
 .skill-option-btn {
