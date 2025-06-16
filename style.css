@@ -3,7 +3,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    min-height: 100vh; /* 画面全体の高さを確保 */
     background-color: #f0f0f0;
     margin: 0;
 }
@@ -18,7 +18,11 @@ body {
     max-width: 600px;
     position: relative;
     height: auto; /* コンテンツに合わせて高さを自動調整 */
+    min-height: 400px; /* 最小高さを設定し、内容が少ない場合でも極端に小さくならないように */
     overflow: hidden; /* 子要素のtransitionのために必要 */
+    display: flex; /* コンテナ自体もFlexboxに */
+    flex-direction: column; /* 内部要素を縦に並べる */
+    justify-content: flex-start; /* 上から配置 */
 }
 
 h1 {
@@ -37,7 +41,8 @@ h2 {
     top: 0;
     left: 0;
     width: 100%;
-    min-height: 100%; /* コンテナの最小高さを考慮 */
+    /* min-height: 100%; */ /* 親（.container）のFlexboxで制御するため削除 */
+    height: 100%; /* 親の高さに合わせて広がる */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -69,8 +74,9 @@ h2 {
 #game-area, #skill-selection-area {
     z-index: 8;
     position: relative;
-    min-height: auto;
-    height: auto;
+    /* min-height: auto; */ /* screenのheight:100%で十分 */
+    /* height: auto; */    /* screenのheight:100%で十分 */
+    flex-grow: 1; /* 親（.container）の残りのスペースを占める */
     justify-content: flex-start;
     align-items: center;
     padding-top: 20px;
@@ -204,7 +210,6 @@ h2 {
 
 .janken-main-area {
     display: flex;
-    /* justify-content: space-around; */ /* space-around を justify-content: center; と gap に変更 */
     justify-content: center; /* 中央に寄せる */
     align-items: flex-start;
     margin-bottom: 30px;
@@ -256,7 +261,6 @@ h2 {
     color: white;
     border: none;
     padding: 12px 25px;
-    /* margin: 5px; */ /* gap でマージンを制御 */
     border-radius: 5px;
     cursor: pointer;
     font-size: 1.1em;
@@ -264,6 +268,7 @@ h2 {
     flex-grow: 1; /* ボタンが均等に幅を取るように */
     min-width: 80px; /* ボタンの最小幅 */
     max-width: 120px; /* ボタンの最大幅 */
+    box-sizing: border-box; /* paddingとborderを幅に含める */
 }
 
 .hand-btn:hover:not(:disabled) {
@@ -280,17 +285,50 @@ h2 {
     border-top: 1px dashed #eee;
     padding-top: 15px;
     text-align: left;
-    max-height: 150px; /* 所持スキルの表示エリアの最大高さ */
+    max-height: 180px; /* 少し高さを増やす */
     overflow-y: auto; /* 溢れたらスクロール */
     padding-right: 10px; /* スクロールバーとの重なりを防ぐ */
+    display: flex; /* Flexboxを適用 */
+    flex-direction: column; /* 縦方向に要素を並べる */
+    gap: 8px; /* 要素間の隙間 */
 }
 
-#skills-display .player-skill-btn {
-    display: inline-block; /* ボタンを横並びにするが、必要に応じて折り返す */
-    margin-bottom: 5px; /* ボタンの下に少しスペース */
-    /* 他のスタイルは既存のままでOK */
+/* 所持スキルボタンのコンテナ */
+#skill-buttons-container {
+    display: flex;
+    flex-wrap: wrap; /* ボタンを折り返す */
+    gap: 8px; /* ボタン間の隙間 */
+    align-items: flex-start; /* ボタンを上揃えにする */
 }
 
+
+.player-skill-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 10px; /* 左右のパディングを少し減らす */
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.85em; /* フォントサイズを少し小さくする */
+    transition: background-color 0.3s ease;
+    white-space: normal; /* テキストを折り返すように設定 */
+    overflow: hidden; /* 溢れたテキストは非表示 */
+    text-overflow: ellipsis; /* 溢れたテキストを...で表示 (複数行には非対応) */
+    flex-shrink: 0; /* スキルボタンが縮小しないようにする（重要） */
+    max-width: 150px; /* 最大幅を設定して広がりすぎないように */
+    min-width: 80px; /* 最小幅も設定 */
+    height: auto; /* 高さもコンテンツに合わせて自動調整 */
+}
+
+.player-skill-btn:hover {
+    background-color: #0056b3;
+}
+
+/* スキルがない場合の表示 */
+#skills-display p {
+    margin: 0; /* マージンをリセット */
+    padding: 0;
+}
 
 #reset-game {
     background-color: #6c757d;
